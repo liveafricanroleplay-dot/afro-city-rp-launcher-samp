@@ -1,0 +1,59 @@
+name: Build AFRO MOBILE APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AFRO-MOBILE-build-ready-source.zip'
+      - '.github/workflows/build-afro-mobile.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Unpack AFRO MOBILE source
+        run: |
+          test -f AFRO-MOBILE-build-ready-source.zip
+          mkdir -p source
+          unzip -q AFRO-MOBILE-build-ready-source.zip -d source
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+          cache: yarn
+          cache-dependency-path: source/SAMP-Mobile-Launcher-RN-main/yarn.lock
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools
+        run: sdkmanager "ndk;21.4.7075529" "build-tools;31.0.0" "platforms;android-33"
+
+      - name: Install JavaScript dependencies
+        working-directory: source/SAMP-Mobile-Launcher-RN-main
+        run: yarn install --frozen-lockfile
+
+      - name: Prepare app environment
+        working-directory: source/SAMP-Mobile-Launcher-RN-main
+        run: cp .env.example .env
+
+      - name: Build debug APK
+        working-directory: source/SAMP-Mobile-Launcher-RN-main/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AFRO-MOBILE-debug-APK
+          path: source/SAMP-Mobile-Launcher-RN-main/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
