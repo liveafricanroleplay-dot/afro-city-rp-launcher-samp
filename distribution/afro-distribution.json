@@ -1,0 +1,33 @@
+{
+  "cdnLauncher": "",
+  "cdnCache": "",
+  "cacheMode": [],
+  "rss": "",
+  "versionHash": "afro-mobile-initial",
+  "packageName": "com.touch.mobile.dark",
+  "projectName": "AFRO MOBILE",
+  "servers": [
+    {
+      "id": 1,
+      "show": true,
+      "version": "1.0",
+      "icon": "",
+      "events": [],
+      "slot": 1000,
+      "bonus": false,
+      "name": "AFRO CITY RP",
+      "description": "Official AFRO CITY RP SA-MP server",
+      "address": "142.132.203.47:14585",
+      "sampVersion": "0.3.7"
+    }
+  ],
+  "launcher": {
+    "appVersion": "1.0.0",
+    "name": "afro-mobile.apk",
+    "hash": "",
+    "bytes": 0,
+    "size": "Not published"
+  },
+  "filesContinue": [],
+  "cache": []
+}
