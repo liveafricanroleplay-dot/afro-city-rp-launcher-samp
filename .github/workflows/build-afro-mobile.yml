@@ -63,15 +63,15 @@ jobs:
 
           plugin_classpath = "classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'"
           if "firebase-crashlytics-gradle" not in root_text:
-              pattern = r"(buildscript\\s*\\{.*?dependencies\\s*\\{)"
-              root_text, count = re.subn(pattern, r"\\1\\n        " + plugin_classpath, root_text, count=1, flags=re.S)
+              pattern = r"(buildscript\s*\{.*?dependencies\s*\{)"
+              root_text, count = re.subn(pattern, r"\1\n        " + plugin_classpath, root_text, count=1, flags=re.S)
               if count != 1:
                   raise SystemExit("Could not safely locate android/build.gradle buildscript dependencies block")
               root.write_text(root_text)
 
           plugin_apply = "apply plugin: 'com.google.firebase.crashlytics'"
           if plugin_apply not in app_text and 'id "com.google.firebase.crashlytics"' not in app_text and "id 'com.google.firebase.crashlytics'" not in app_text:
-              app_text = re.sub(r"(^\\s*apply plugin: ['\\\"]com\\.android\\.application['\\\"]\\s*$)", r"\\1\\n" + plugin_apply, app_text, count=1, flags=re.M)
+              app_text = re.sub(r"(^\s*apply plugin: ['\\"]com\.android\.application['\\"]\s*$)", r"\1\n" + plugin_apply, app_text, count=1, flags=re.M)
               if plugin_apply not in app_text:
                   raise SystemExit("Could not safely add Crashlytics plugin to android/app/build.gradle")
               app.write_text(app_text)
