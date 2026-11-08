@@ -1,0 +1,2 @@
+AFRO CITY Android launcher build trigger.
+The Android APK build is configured in .github/workflows/android-build.yml.
