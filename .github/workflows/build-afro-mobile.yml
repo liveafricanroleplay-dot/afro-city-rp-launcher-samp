@@ -71,10 +71,12 @@ jobs:
 
           plugin_apply = "apply plugin: 'com.google.firebase.crashlytics'"
           if plugin_apply not in app_text and 'id "com.google.firebase.crashlytics"' not in app_text and "id 'com.google.firebase.crashlytics'" not in app_text:
-              app_text = re.sub(r"(^\s*apply plugin: ['\\"]com\.android\.application['\\"]\s*$)", r"\1\n" + plugin_apply, app_text, count=1, flags=re.M)
-              if plugin_apply not in app_text:
-                  raise SystemExit("Could not safely add Crashlytics plugin to android/app/build.gradle")
-              app.write_text(app_text)
+              app_lines = app_text.splitlines()
+              app_index = next((i for i, line in enumerate(app_lines) if "com.android.application" in line and "apply plugin" in line), None)
+              if app_index is None:
+                  raise SystemExit("Could not safely locate Android application plugin line")
+              app_lines.insert(app_index + 1, plugin_apply)
+              app.write_text("\n".join(app_lines) + "\n")
 
           print("Crashlytics Gradle plugin configured.")
           PY
